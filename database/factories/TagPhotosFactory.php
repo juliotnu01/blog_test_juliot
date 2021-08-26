@@ -7,6 +7,9 @@ use Faker\Generator as Faker;
 
 $factory->define(TagPhotos::class, function (Faker $faker) {
     return [
-        "photo_id" => factory(App\Models\Photo::class)
+        "photo_id" => function () {
+            return factory(App\Models\Photo::class)->create()->id;
+        }
+        
     ];
 });

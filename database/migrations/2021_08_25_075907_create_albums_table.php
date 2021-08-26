@@ -18,7 +18,6 @@ class CreateAlbumsTable extends Migration
             $table->string('title')->nullable();
             $table->string('description')->nullable();
             $table->foreignId('location_id')->nullable()->constrained('locations');
-            $table->foreignId('photo_id')->nullable()->constrained('photos');
             $table->foreignId('member_id')->nullable()->constrained('members');
             $table->timestamps();
         });

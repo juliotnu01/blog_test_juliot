@@ -12,6 +12,9 @@ $factory->define(Member::class, function (Faker $faker) {
         "name" => $faker->name,
         "phoneNum" => $faker->phoneNumber,
         "address" => $faker->address,
-        "role_id" => factory(App\Models\Role::class)
+        "role_id" => function () {
+            return factory(App\Models\Role::class)->create()->id;
+        }
+         
     ];
 });

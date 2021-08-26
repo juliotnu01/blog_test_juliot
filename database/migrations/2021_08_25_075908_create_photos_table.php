@@ -21,7 +21,7 @@ class CreatePhotosTable extends Migration
             $table->dateTime('uploadDate')->nullable();
             $table->integer('view')->nullable();
             $table->string('imgPath')->nullable();
-            $table->foreignId('comment_id')->nullable()->constrained('comments');
+            $table->foreignId('album_id')->nullable()->constrained('albums');
             $table->timestamps();
         });
     }

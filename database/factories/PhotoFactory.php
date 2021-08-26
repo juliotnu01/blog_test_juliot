@@ -13,7 +13,9 @@ $factory->define(Photo::class, function (Faker $faker) {
         "uploadDate"=> $faker->dateTime(),
         "view"=> $faker->numberBetween(0,99),
         "imgPath"=> $faker->imageUrl($width = 640, $height = 480),
-        "comment_id" => factory(App\Models\Comment::class)
+        "album_id" => function (){
+            return factory(App\Models\Album::class)->create()->id;
+        }
     ];
 });
 

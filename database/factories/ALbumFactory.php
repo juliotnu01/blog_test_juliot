@@ -10,7 +10,6 @@ $factory->define(Album::class, function (Faker $faker) {
         "title" => $faker->sentence(),
         "description" => $faker->sentence(),
         "location_id" =>  factory(App\Models\Location::class),
-        "photo_id" => factory(App\Models\Photo::class),
         "member_id" => factory(App\Models\Member::class)
     ];
 });

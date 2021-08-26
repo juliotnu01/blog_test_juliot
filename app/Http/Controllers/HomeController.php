@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\Album;
 use Illuminate\Http\Request;
+use App\Http\Resources\ALbumResource;
 
 class HomeController extends Controller
 {
@@ -23,6 +24,8 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        
+        $albums = collect(ALbumResource::collection(Album::with(['belongsToLocation', 'belongsToMember'])->get()));
+        return view('home',compact('albums'));
     }
 }
