@@ -14,7 +14,7 @@ class Album extends Model
     public function belongsToMember(){
         return $this->belongsTo(Member::class, 'member_id');
     }
-    public function hasMamyPhotos(){
+    public function hasManyPhotos(){
         return $this->hasMany(Photo::class, 'album_id');
     }
 

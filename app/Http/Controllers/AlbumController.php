@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Album;
+use App\Models\{Album, Location, Tag, TagPhotos, Photo};
 use Illuminate\Http\Request;
 use App\Http\Resources\ALbumResource;
+use DB;
+use Illuminate\Support\Facades\Storage;
+
 
 class AlbumController extends Controller
 {
@@ -16,7 +19,7 @@ class AlbumController extends Controller
     public function index()
     {
         try {
-            $album = Album::with(['belongsToLocation', 'belongsToMember', 'hasMamyPhotos'])->get();
+            $album = Album::with(['belongsToLocation', 'belongsToMember', 'hasManyPhotos'])->get();
             return  response()->json(ALbumResource::collection($album));
         } catch (\Throwable $th) {
             throw $th;
@@ -30,7 +33,11 @@ class AlbumController extends Controller
      */
     public function create()
     {
-        //
+        try {
+            return view('createAlbum');
+        } catch (\Throwable $th) {
+            throw $th;
+        }
     }
 
     /**
@@ -39,9 +46,42 @@ class AlbumController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, Album $album, Location $location)
     {
-        //
+        try {
+            return DB::transaction(function () use ($request, $album, $location) {
+                
+                $location->name = $request['ubicacion'];
+                $location->save();
+
+                $album->title = $request['title'];
+                $album->description = $request['descripcion'];
+                $album->location_id = $location['id'];
+                $album->save();
+
+
+               foreach (collect($request) as $key => $value) {
+                    if (is_file($request->file($key))) {
+                        $photos[] = $request->file($key);
+                    }
+                }
+
+                for ($i=0; $i < count($photos) ; $i++) { 
+
+                        Storage::disk('public')->put('photos/'.$photos[$i]->getClientOriginalName(), $photos[$i]->getClientOriginalName());
+                        $url = Storage::disk('public')->url('photos/'.$photos[$i]->getClientOriginalName());
+                        $ph = new Photo();
+                        $ph->imgPath = $url;
+                        $ph->album_id = $album['id'];
+                        $ph->save();
+                        
+                }
+
+
+            }, 5);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
     }
 
     /**

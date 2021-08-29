@@ -25,7 +25,7 @@ class HomeController extends Controller
     public function index()
     {
         
-        $albums = collect(ALbumResource::collection(Album::with(['belongsToLocation', 'belongsToMember'])->get()));
+        $albums = collect(ALbumResource::collection(Album::with(['belongsToLocation', 'belongsToMember', 'hasManyPhotos'])->get()));
         return view('home',compact('albums'));
     }
 }
