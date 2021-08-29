@@ -6,6 +6,7 @@ use App\Models\{Album, Location, Tag, TagPhotos, Photo};
 use Illuminate\Http\Request;
 use App\Http\Resources\ALbumResource;
 use DB;
+use File;
 use Illuminate\Support\Facades\Storage;
 
 
@@ -67,9 +68,8 @@ class AlbumController extends Controller
                 }
 
                 for ($i=0; $i < count($photos) ; $i++) { 
-
-                        Storage::disk('public')->put('photos/'.$photos[$i]->getClientOriginalName(), $photos[$i]->getClientOriginalName());
-                        $url = Storage::disk('public')->url('photos/'.$photos[$i]->getClientOriginalName());
+                        Storage::disk('photo')->put('photos/'.$photos[$i]->getClientOriginalName(), $photos[$i] );
+                        $url = Storage::disk('photo')->url('photos/'.$photos[$i]->getClientOriginalName());
                         $ph = new Photo();
                         $ph->imgPath = $url;
                         $ph->album_id = $album['id'];
