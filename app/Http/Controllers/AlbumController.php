@@ -68,16 +68,15 @@ class AlbumController extends Controller
                 }
 
                 for ($i=0; $i < count($photos) ; $i++) { 
-                        Storage::disk('photo')->put('photos/'.$photos[$i]->getClientOriginalName(), $photos[$i] );
+                        Storage::disk('photo')->put('photos/'.$photos[$i]->getClientOriginalName(),  File($photos[$i]) );
                         $url = Storage::disk('photo')->url('photos/'.$photos[$i]->getClientOriginalName());
                         $ph = new Photo();
                         $ph->imgPath = $url;
                         $ph->album_id = $album['id'];
                         $ph->save();
-                        
                 }
-
-
+                $albums = collect(ALbumResource::collection(Album::with(['belongsToLocation', 'belongsToMember', 'hasManyPhotos'])->get()));
+                return view('home',compact('albums'));
             }, 5);
         } catch (\Throwable $th) {
             throw $th;
@@ -90,9 +89,14 @@ class AlbumController extends Controller
      * @param  \App\Models\Album  $album
      * @return \Illuminate\Http\Response
      */
-    public function show(Album $album)
+    public function show($id)
     {
-        //
+        try {
+            $album = Album::where('id', $id)->with(['belongsToLocation', 'belongsToMember', 'hasManyPhotos', 'hasManyPhotos.hasManyTags'])->first();
+            return view('ViewAlbum', compact(['album']));
+        } catch (\Throwable $th) {
+            throw $th;
+        }
     }
 
     /**
