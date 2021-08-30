@@ -21,6 +21,7 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/agregar-album', 'AlbumController@create')->name('create.album');
+Route::get('/view-album/{id}', 'AlbumController@show')->name('view.album');
 
 Auth::routes();
 
